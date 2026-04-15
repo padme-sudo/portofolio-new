@@ -18,9 +18,9 @@ export default function Footer() {
         </div>
 
         <div className="flex gap-6">
-          <SocialLink href="https://github.com" icon={<GithubIcon />} />
-          <SocialLink href="https://instagram.com" icon={<InstagramIcon />} />
-          <SocialLink href="https://facebook.com" icon={<FacebookIcon />} />
+          <SocialLink href="https://github.com/adityasiagian07" icon={<GithubIcon />} />
+          <SocialLink href="https://instagram.com/_adityasiagian" icon={<InstagramIcon />} />
+          <SocialLink href="https://www.facebook.com/share/1CfYK3UHHL/" icon={<FacebookIcon />} />
           <SocialLink href="#" icon={<Globe size={20} />} />
         </div>
 

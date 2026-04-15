@@ -19,6 +19,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,11 +29,40 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(`#${entry.target.id}`);
+          }
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" }
+    );
+
+    navLinks.forEach((link) => {
+      const el = document.querySelector(link.href);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+      setMobileMenuOpen(false);
+    }
+  };
+
   return (
     <nav
       className={cn(
         "fixed top-0 left-0 w-full z-50 transition-all duration-300 px-6 py-4",
-        scrolled ? "bg-background/80 backdrop-blur-md py-3 border-b border-border" : "bg-transparent"
+        scrolled ? "bg-background/50 backdrop-blur-md py-3 border-b border-border" : "bg-transparent"
       )}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -42,27 +72,39 @@ export default function Navbar() {
           transition={{ duration: 0.5 }}
           className="text-2xl font-bold tracking-tighter"
         >
-          <Link href="/">Aditya <span className="text-blue-500">Siagian.</span></Link>
+          <Link href="/" onClick={(e) => handleLinkClick(e, "#hero")}>Aditya <span className="text-blue-500">Siagian.</span></Link>
         </motion.div>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link, i) => (
-            <motion.div
-              key={link.name}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-            >
-              <Link
-                href={link.href}
-                className="text-sm font-medium text-zinc-400 hover:text-foreground transition-colors relative group"
+          {navLinks.map((link, i) => {
+            const isActive = activeSection === link.href;
+            return (
+              <motion.div
+                key={link.name}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
               >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-blue-500 transition-all group-hover:w-full" />
-              </Link>
-            </motion.div>
-          ))}
+                <a
+                  href={link.href}
+                  onClick={(e) => handleLinkClick(e, link.href)}
+                  className={cn(
+                    "text-sm font-medium transition-colors relative group",
+                    isActive ? "text-foreground" : "text-zinc-400 hover:text-foreground"
+                  )}
+                >
+                  {link.name}
+                  <span 
+                    className={cn(
+                      "absolute -bottom-1 left-0 h-[1px] bg-blue-500 transition-all",
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    )}
+                  />
+                </a>
+              </motion.div>
+            );
+          })}
           <ThemeToggle />
           <motion.button
             initial={{ opacity: 0, scale: 0.8 }}
@@ -114,22 +156,28 @@ export default function Navbar() {
               </div>
 
               <div className="flex flex-col gap-6">
-                {navLinks.map((link, i) => (
-                  <motion.div
-                    key={link.name}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-3xl font-bold hover:text-blue-500 transition-colors"
+                {navLinks.map((link, i) => {
+                  const isActive = activeSection === link.href;
+                  return (
+                    <motion.div
+                      key={link.name}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
                     >
-                      {link.name}
-                    </Link>
-                  </motion.div>
-                ))}
+                      <a
+                        href={link.href}
+                        onClick={(e) => handleLinkClick(e, link.href)}
+                        className={cn(
+                          "text-3xl font-bold transition-colors",
+                          isActive ? "text-blue-500" : "hover:text-blue-500"
+                        )}
+                      >
+                        {link.name}
+                      </a>
+                    </motion.div>
+                  );
+                })}
               </div>
 
               <div className="mt-auto">
