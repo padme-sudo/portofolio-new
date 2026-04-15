@@ -10,8 +10,11 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Personal Portfolio | Modern Web Developer",
-  description: "A premium personal portfolio showcasing creative web development and design.",
+  title: "Aditya Siagian | Full-Stack Developer",
+  description: "A premium personal portfolio showcasing creative web development and design by Aditya Siagian.",
+  icons: {
+    icon: "/profile.jpeg",
+  },
 };
 
 export default function RootLayout({
