@@ -62,7 +62,14 @@ export default function MusicPlayer() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
-      <audio ref={audioRef} loop />
+      <audio ref={audioRef} loop onEnded={() => {
+        const next = (current + 1) % tracks.length;
+        setCurrent(next);
+        if (audioRef.current) {
+          audioRef.current.src = tracks[next].src;
+          audioRef.current.play();
+        }
+      }} />
 
       {open && (
         <div ref={panelRef} className="neo-border bg-white neo-shadow-sm p-4 w-60">
