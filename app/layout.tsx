@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { SmoothScrollProvider } from "@/components/providers/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import CustomCursor from "@/components/ui/CustomCursor";
+import MusicPlayer from "@/components/ui/MusicPlayer";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Aditya Siagian | Full-Stack Developer",
+  title: "Aditya Siagian | Portofolio",
   description: "A premium personal portfolio showcasing creative web development and design by Aditya Siagian.",
   icons: {
-    icon: "/profile.jpeg",
+    icon: "/profile3.jpeg",
   },
 };
 
@@ -24,14 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} antialiased selection:bg-blue-500/30`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <SmoothScrollProvider>
-            <CustomCursor />
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-          </SmoothScrollProvider>
+      <body className={`${spaceGrotesk.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <Navbar />
+          <main>{children}</main>
+          <MusicPlayer />
         </ThemeProvider>
       </body>
     </html>

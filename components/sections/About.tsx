@@ -1,124 +1,169 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion } from "framer-motion";
-
-const draggablePhotos = [
-  { src: "/profile.jpeg", rotate: "-6deg", top: "15%", left: "10%" },
-  { src: "/profile2.jpeg", rotate: "8deg", top: "10%", left: "45%" },
-  { src: "/profile3.jpeg", rotate: "-12deg", top: "40%", left: "15%" },
-  { src: "/profile4.jpeg", rotate: "5deg", top: "35%", left: "50%" },
-];
+import { useEffect } from "react";
+import { animate, stagger } from "animejs";
 
 export default function About() {
-  const constraintsRef = useRef(null);
+  useEffect(() => {
+    animate(".about-reveal", {
+      translateY: [30, 0],
+      opacity: [0, 1],
+      duration: 500,
+      delay: stagger(100),
+      ease: "outQuad",
+    });
+
+    animate(".about-float", {
+      translateY: [-6, 6],
+      duration: 2500,
+      loop: true,
+      direction: "alternate",
+      ease: "easeInOutSine",
+    });
+  }, []);
 
   return (
-    <section id="about" className="py-24 px-6 relative overflow-hidden bg-background">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        {/* Draggable Photo Slider Section */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative h-[500px] md:h-[600px] rounded-3xl overflow-hidden group cursor-grab active:cursor-grabbing border border-border bg-foreground/[0.02]"
-          ref={constraintsRef}
-        >
-          <div className="absolute top-6 left-6 z-30 pointer-events-none">
-            <span className="text-xs font-mono uppercase tracking-[0.2em] bg-background/50 backdrop-blur-md px-4 py-2 rounded-full text-foreground border border-border">
-              Drag to slide ↔
-            </span>
-          </div>
-
-          <motion.div
-            drag="x"
-            dragConstraints={constraintsRef}
-            dragElastic={0.2}
-            dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-            className="flex gap-6 absolute top-1/2 -translate-y-1/2 left-10"
-            style={{ width: "max-content", paddingRight: "40px" }}
-          >
-            {draggablePhotos.map((photo, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.05, rotate: 0 }}
-                initial={{ rotate: photo.rotate }}
-                className="w-64 h-80 md:w-72 md:h-96 p-3 bg-white dark:bg-zinc-800 shadow-2xl rounded-2xl flex-shrink-0 border border-border transition-transform duration-300"
-              >
-                <div className="w-full h-full overflow-hidden rounded-xl">
+    <section
+      id="about"
+      className="min-h-screen flex items-center py-16 md:py-20 px-6 relative overflow-hidden bg-bg-secondary border-y-[3px] border-fg"
+    >
+      <div className="max-w-5xl mx-auto w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-4">
+          <div className="lg:col-span-2 about-reveal" style={{ opacity: 0 }}>
+            <div className="neo-border bg-yellow neo-shadow h-full about-float">
+              <div className="p-4">
+                <div className="aspect-square overflow-hidden border-[3px] border-fg">
                   <img
-                    src={photo.src}
-                    alt={`Gallery ${i}`}
-                    className="w-full h-full object-cover pointer-events-none"
+                    src="/profile2.jpeg"
+                    alt="Aditya Siagian"
+                    className="w-full h-full object-cover object-center"
                   />
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
-          
-          <div className="absolute bottom-8 left-8 p-6 glass rounded-2xl z-20 border border-white/10 max-w-[240px] pointer-events-none">
-            <h3 className="text-xl font-bold text-white mb-1">Based in Indonesia</h3>
-            <p className="text-zinc-300 text-sm">
-              Transforming ideas into reality since 2017.
-            </p>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="text-blue-500 font-mono tracking-widest uppercase text-sm mb-4 block">
-            About Me
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
-            I build digital solutions that{" "}
-            <span className="text-zinc-500">spark</span> conversation.
-          </h2>
-          <div className="space-y-6 text-zinc-400 leading-relaxed text-lg">
-            <p>
-              I am a passionate Full-Stack Web Developer with over 1 year of
-              hands-on experience building modern, scalable, and user-friendly
-              web applications. I enjoy working across both frontend and
-              backend, turning ideas into fully functional digital products.
-            </p>
-            <p>
-              On the frontend, I focus on creating clean, responsive, and
-              interactive user interfaces using modern technologies. On the
-              backend, I design efficient systems, APIs, and databases that
-              ensure performance and reliability. I believe that great software
-              is not just about functionality, but also about delivering a
-              smooth and engaging user experience.
-            </p>
-            <p>
-              I am constantly learning and exploring new technologies to improve
-              my skills and stay up to date with industry trends. I enjoy
-              solving problems, optimizing systems, and writing clean,
-              maintainable code.
-            </p>
-            <p>
-              Currently, I am open to new opportunities, collaborations, and
-              challenging projects where I can contribute, grow, and make a
-              meaningful impact.
-            </p>
-            <p>Let’s build something amazing together 🚀</p>
-          </div>
-
-          <div className="mt-12 grid grid-cols-2 gap-8">
-            <div>
-              <h4 className="text-foreground text-3xl font-bold mb-1">20+</h4>
-              <p className="text-zinc-500 text-sm">Projects Completed</p>
-            </div>
-            <div>
-              <h4 className="text-foreground text-3xl font-bold mb-1">1+</h4>
-              <p className="text-zinc-500 text-sm">Years Experience</p>
+              </div>
+              <div className="bg-white border-t-[3px] border-fg p-4">
+                <h3 className="text-xl font-black">Aditya Siagian</h3>
+                <p className="text-fg-secondary text-sm font-medium">
+                  Temanggung, Indonesia
+                </p>
+              </div>
             </div>
           </div>
-        </motion.div>
+
+          <div className="lg:col-span-3 neo-card bg-white neo-shadow p-4 md:p-5 about-reveal" style={{ opacity: 0 }}>
+            <span className="bg-purple text-white font-black tracking-wider uppercase text-xs px-2 py-0.5 neo-border inline-block mb-2">
+              About
+            </span>
+            <p className="text-fg-secondary leading-relaxed font-medium">
+              Full Stack Developer, Network Engineer, and Cyber Security
+              Enthusiast. I build web apps, design network infrastructure,
+              and study ethical hacking.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="neo-card bg-white neo-shadow p-4 md:p-5 about-reveal" style={{ opacity: 0 }}>
+            <span className="bg-cyan text-white font-black tracking-wider uppercase text-xs px-2 py-0.5 neo-border inline-block mb-2">Experience</span>
+            <div className="space-y-3">
+              <div>
+                <div className="flex items-center justify-between">
+                  <p className="font-black">Full Stack Developer</p>
+                  <span className="bg-purple text-white font-bold text-xs px-2 py-0.5 neo-border">2025 - Present</span>
+                </div>
+                <p className="text-fg-secondary text-sm font-medium">Freelance</p>
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <p className="font-black">Penetration Tester</p>
+                  <span className="bg-purple text-white font-bold text-xs px-2 py-0.5 neo-border">2026 - Present</span>
+                </div>
+                <p className="text-fg-secondary text-sm font-medium">Freelance</p>
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <p className="font-black">Network Engineer</p>
+                  <span className="bg-purple text-white font-bold text-xs px-2 py-0.5 neo-border">2017 - Present</span>
+                </div>
+                <p className="text-fg-secondary text-sm font-medium">SMK IT Ihsanul Fikri Magelang</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="neo-card bg-white neo-shadow p-4 md:p-5 about-reveal" style={{ opacity: 0 }}>
+            <span className="bg-pink text-white font-black tracking-wider uppercase text-xs px-2 py-0.5 neo-border inline-block mb-2">Skills</span>
+            <div className="space-y-3">
+              <div>
+                <p className="text-xs font-black text-fg-secondary mb-2">Frontend</p>
+                <div className="flex flex-wrap gap-2">
+                  <SkillLogo slug="nextdotjs" name="Next.js" />
+                  <SkillLogo slug="react" name="React" />
+                  <SkillLogo slug="tailwindcss" name="Tailwind" />
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-black text-fg-secondary mb-2">Backend</p>
+                <div className="flex flex-wrap gap-2">
+                  <SkillLogo slug="nodedotjs" name="Node.js" />
+                  <SkillLogo slug="laravel" name="Laravel" />
+                  <SkillLogo slug="mysql" name="MySQL" />
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-black text-fg-secondary mb-2">Network & Security</p>
+                <div className="flex flex-wrap gap-2">
+                  <SkillLogo slug="cisco" name="Cisco" />
+                  <SkillLogo slug="mikrotik" name="Mikrotik" />
+                  <SkillLogo slug="linux" name="Linux" />
+                  <SkillLogo slug="kalilinux" name="Kali Linux" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <div className="neo-card bg-white neo-shadow p-4 md:p-5 about-reveal" style={{ opacity: 0 }}>
+            <span className="bg-green text-white font-black tracking-wider uppercase text-xs px-2 py-0.5 neo-border inline-block mb-2">Training</span>
+            <div className="space-y-2">
+              <div>
+                <p className="font-black text-sm">Dicoding — Pemrograman Dasar</p>
+                <p className="text-fg-secondary text-xs font-medium">2025</p>
+              </div>
+              <div>
+                <p className="font-black text-sm">Dicoding — Data Science</p>
+                <p className="text-fg-secondary text-xs font-medium">2025</p>
+              </div>
+              <div>
+                <p className="font-black text-sm">ID-Networkers (IDN) — Cisco CCNA</p>
+                <p className="text-fg-secondary text-xs font-medium">2026</p>
+              </div>
+              <div>
+                <p className="font-black text-sm">ID-Networkers (IDN) — PenTest Bootcamp</p>
+                <p className="text-fg-secondary text-xs font-medium">2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
+  );
+}
+
+function SkillLogo({ slug, name }: { slug: string; name: string }) {
+  return (
+    <div
+      title={name}
+      className="w-11 h-11 flex items-center justify-center bg-white"
+    >
+      {slug ? (
+        <img
+          src={`https://cdn.simpleicons.org/${slug}`}
+          alt={name}
+          className="w-6 h-6"
+        />
+      ) : (
+        <span className="font-black text-sm">{name.slice(0, 2)}</span>
+      )}
+    </div>
   );
 }

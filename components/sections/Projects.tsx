@@ -1,111 +1,85 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Code } from "lucide-react";
-import Image from "next/image";
+import React, { useEffect } from "react";
+import { animate, stagger } from "animejs";
 
 const projects = [
   {
-    id: 1,
-    title: "E-Commerce Reimagined",
-    category: "Web App",
-    image: "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=1000",
+    title: "Web Katering VAS",
+    desc: "Online catering platform for food menu ordering with order management system.",
+    image: "/project1.png",
     link: "#",
     github: "#",
-    description: "A high-performance luxury shopping experience with Next.js 14."
+    tech: ["react"],
+  },
+  {
+    title: "Web Redesign Web School SMK IT Ihsanul Fikri",
+    desc: "School website redesign with a modern, responsive, and informative layout.",
+    image: "/project2.png",
+    link: "#",
+    github: "#",
+    tech: ["react", "wordpress"],
   },
 ];
 
-const categories = ["All", "Web App", "SaaS", "Fintech", "Design"];
-
 export default function Projects() {
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  const filteredProjects = activeCategory === "All" 
-    ? projects 
-    : projects.filter(p => p.category === activeCategory);
+  useEffect(() => {
+    animate(".proj-reveal", {
+      translateY: [30, 0],
+      opacity: [0, 1],
+      duration: 500,
+      delay: stagger(100),
+      ease: "outQuad",
+    });
+  }, []);
 
   return (
-    <section id="projects" className="py-24 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <span className="text-blue-500 font-mono tracking-widest uppercase text-sm mb-4 block">
-            Featured Projects
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            Selected <span className="text-gradient">Creations</span>
-          </h2>
+    <section id="projects" className="min-h-screen flex items-center py-16 px-6 bg-bg-secondary border-y-[3px] border-fg">
+      <div className="max-w-6xl mx-auto text-center">
+        <span className="bg-cyan text-white font-black tracking-wider uppercase text-sm px-3 py-1 neo-border inline-block mb-4 proj-reveal" style={{ opacity: 0 }}>
+          Projects
+        </span>
 
-          <div className="flex flex-wrap justify-center gap-4 mt-8">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeCategory === cat 
-                    ? "bg-blue-500 text-white" 
-                    : "glass text-zinc-400 hover:text-white"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {projects.map((project, i) => (
+            <div key={i} className="neo-card bg-white neo-shadow overflow-hidden text-left proj-reveal transition-transform duration-200 hover:scale-[1.02]" style={{ opacity: 0 }}>
+              <div className="aspect-[16/10] overflow-hidden border-b-[3px] border-fg bg-bg-secondary">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-5">
+                <h3 className="text-lg font-black mb-1">{project.title}</h3>
+                <p className="text-fg-secondary text-sm font-medium mb-3">
+                  {project.desc}
+                </p>
+                <div className="flex gap-1.5 mb-4">
+                  {project.tech.map((t) => (
+                    <img
+                      key={t}
+                      src={`https://cdn.simpleicons.org/${t}`}
+                      alt={t}
+                      className="w-5 h-5"
+                      title={t}
+                    />
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <a href={project.link} className="w-9 h-9 neo-border bg-white neo-shadow-sm flex items-center justify-center hover:bg-cyan transition-colors">
+                    <img src="https://cdn.simpleicons.org/googlechrome" alt="Live" className="w-4 h-4" />
+                  </a>
+                  <a href={project.github} className="w-9 h-9 neo-border bg-white neo-shadow-sm flex items-center justify-center hover:bg-yellow transition-colors">
+                    <img src="https://cdn.simpleicons.org/github" alt="Code" className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-
-        <motion.div 
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
-        >
-          <AnimatePresence>
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
       </div>
     </section>
-  );
-}
-
-function ProjectCard({ project }: { project: any }) {
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.5 }}
-      className="group relative overflow-hidden rounded-3xl bg-background-secondary border border-border"
-    >
-      <div className="aspect-[16/10] overflow-hidden">
-        <img 
-          src={project.image} 
-          alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        <div className="absolute inset-x-0 top-0 h-[62.5%] bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-4">
-          <a href={project.link} className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center hover:scale-110 transition-transform shadow-xl">
-            <ExternalLink size={20} />
-          </a>
-          <a href={project.github} className="w-12 h-12 rounded-full border border-border bg-background/50 flex items-center justify-center hover:scale-110 transition-transform shadow-xl text-foreground">
-            <Code size={20} />
-          </a>
-        </div>
-      </div>
-      
-      <div className="p-8">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <span className="text-blue-500 text-xs font-mono mb-2 block">{project.category}</span>
-            <h3 className="text-2xl font-bold">{project.title}</h3>
-          </div>
-        </div>
-        <p className="text-zinc-500 text-sm leading-relaxed max-w-sm">
-          {project.description}
-        </p>
-      </div>
-    </motion.div>
   );
 }

@@ -9,7 +9,6 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
-  // Avoid hydration mismatch
   React.useEffect(() => setMounted(true), []);
 
   if (!mounted) return <div className="w-10 h-10" />;
@@ -17,7 +16,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="relative w-10 h-10 rounded-full glass flex items-center justify-center hover:scale-110 transition-transform active:scale-95"
+      className="w-10 h-10 neo-border bg-white neo-shadow-sm flex items-center justify-center hover:bg-yellow transition-colors"
       aria-label="Toggle theme"
     >
       <AnimatePresence mode="wait" initial={false}>
@@ -29,9 +28,9 @@ export function ThemeToggle() {
           transition={{ duration: 0.2, ease: "easeInOut" }}
         >
           {theme === "dark" ? (
-            <Moon className="w-5 h-5 text-blue-400" />
+            <Moon className="w-5 h-5 text-fg" />
           ) : (
-            <Sun className="w-5 h-5 text-amber-500" />
+            <Sun className="w-5 h-5 text-fg" />
           )}
         </motion.div>
       </AnimatePresence>

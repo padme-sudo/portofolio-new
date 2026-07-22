@@ -1,144 +1,132 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Send, CheckCircle2 } from "lucide-react";
+import React, { useState, useEffect, FormEvent } from "react";
+import { Send, CheckCircle2, Loader2 } from "lucide-react";
+import { animate, stagger } from "animejs";
 
-const contactSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-});
-
-type ContactFormValues = z.infer<typeof contactSchema>;
+const ACCESS_KEY = "669a1ad0-3c61-4ab9-bd3c-bbab7b540e2b";
 
 export default function Contact() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<ContactFormValues>({
-    resolver: zodResolver(contactSchema),
-  });
+  useEffect(() => {
+    animate(".contact-reveal", {
+      translateY: [30, 0],
+      opacity: [0, 1],
+      duration: 500,
+      delay: stagger(100),
+      ease: "outQuad",
+    });
+  }, []);
 
-  const onSubmit = async (data: ContactFormValues) => {
-    setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(data);
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    reset();
-    setTimeout(() => setIsSuccess(false), 5000);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus("loading");
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: data,
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
-    <section id="contact" className="py-24 px-6 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
-        <div>
-          <span className="text-blue-500 font-mono tracking-widest uppercase text-sm mb-4 block">
-            Get In Touch
+    <section
+      id="contact"
+      className="min-h-screen flex items-center py-24 px-6 bg-bg-secondary border-y-[3px] border-fg relative overflow-hidden"
+    >
+      <div className="max-w-4xl mx-auto w-full">
+        <div className="text-center mb-12">
+          <span className="bg-green text-white font-black tracking-wider uppercase text-sm px-3 py-1 neo-border inline-block mb-4 contact-reveal" style={{ opacity: 0 }}>
+            Contact
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            Let's create something <span className="text-gradient">extraordinary</span> together.
+          <h2 className="text-4xl md:text-5xl font-black contact-reveal" style={{ opacity: 0 }}>
+            Let&apos;s{" "}
+            <span className="bg-pink text-white px-2 neo-border inline-block -rotate-1">
+              Talk
+            </span>
           </h2>
-          <p className="text-zinc-400 text-lg mb-12 max-w-md">
-            I'm always open to discussing new projects, creative ideas or 
-            opportunities to be part of your visions.
-          </p>
-
-          <div className="space-y-8">
-            <ContactInfoItem label="Email" value="adityasiagian07@gmail.com" />
-            <ContactInfoItem label="Phone" value="+62 812 2879 9948" />
-            <ContactInfoItem label="Location" value="Temanggung, Indonesia" />
-          </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="p-10 glass rounded-3xl border border-border relative"
-        >
-          {isSuccess ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="absolute inset-0 flex flex-col items-center justify-center text-center p-10 bg-background/95 rounded-3xl z-10"
-            >
-              <CheckCircle2 size={64} className="text-green-500 mb-6" />
-              <h3 className="text-2xl font-bold mb-2">Message Sent!</h3>
-              <p className="text-zinc-400">Thanks for reaching out. I'll get back to you soon.</p>
-              <button 
-                onClick={() => setIsSuccess(false)}
-                className="mt-8 text-sm text-blue-500 hover:underline"
-              >
-                Send another message
-              </button>
-            </motion.div>
-          ) : null}
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Name</label>
-              <input
-                {...register("name")}
-                className="w-full bg-foreground/[0.03] border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors"
-                placeholder="Your name"
-              />
-              {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-4 contact-reveal" style={{ opacity: 0 }}>
+            <div className="neo-card bg-white neo-shadow-sm px-5 py-4">
+              <span className="text-fg-secondary text-xs font-black uppercase tracking-wider block mb-1">
+                Email
+              </span>
+              <span className="text-fg font-black">adityasiagian07@gmail.com</span>
             </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Email</label>
-              <input
-                {...register("email")}
-                className="w-full bg-foreground/[0.03] border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors"
-                placeholder="your@email.com"
-              />
-              {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
+            <div className="neo-card bg-white neo-shadow-sm px-5 py-4">
+              <span className="text-fg-secondary text-xs font-black uppercase tracking-wider block mb-1">
+                Location
+              </span>
+              <span className="text-fg font-black">Temanggung, Indonesia</span>
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Message</label>
-              <textarea
-                {...register("message")}
-                rows={4}
-                className="w-full bg-foreground/[0.03] border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors resize-none"
-                placeholder="Tell me about your project..."
-              />
-              {errors.message && <p className="text-red-500 text-xs">{errors.message.message}</p>}
-            </div>
-
-            <button
-              disabled={isSubmitting}
-              type="submit"
-              className="w-full py-4 bg-foreground text-background rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-500 hover:text-white transition-all disabled:opacity-50"
-            >
-              {isSubmitting ? "Sending..." : "Send Message"}
-              {!isSubmitting && <Send size={18} />}
-            </button>
-          </form>
-        </motion.div>
+          <div className="neo-card bg-yellow neo-shadow p-6 contact-reveal" style={{ opacity: 0 }}>
+            {status === "success" ? (
+              <div className="flex flex-col items-center justify-center text-center py-8">
+                <CheckCircle2 size={48} className="text-green mb-4" />
+                <h3 className="text-xl font-black mb-1">Message Sent!</h3>
+                <p className="text-fg-secondary text-sm font-medium">Thanks for reaching out.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <input type="hidden" name="access_key" value={ACCESS_KEY} />
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  placeholder="Your Name"
+                  className="w-full bg-white border-[3px] border-fg px-4 py-3 font-medium focus:outline-none focus:bg-cyan"
+                />
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="your@email.com"
+                  className="w-full bg-white border-[3px] border-fg px-4 py-3 font-medium focus:outline-none focus:bg-cyan"
+                />
+                <textarea
+                  name="message"
+                  required
+                  rows={3}
+                  placeholder="Your Message"
+                  className="w-full bg-white border-[3px] border-fg px-4 py-3 font-medium focus:outline-none focus:bg-cyan resize-none"
+                />
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="w-full neo-btn py-3 bg-fg text-bg font-black uppercase flex items-center justify-center gap-2 neo-shadow disabled:opacity-50"
+                >
+                  {status === "loading" ? (
+                    <><Loader2 size={16} className="animate-spin" /> Sending...</>
+                  ) : (
+                    <><Send size={16} /> Send</>
+                  )}
+                </button>
+                {status === "error" && (
+                  <p className="text-pink text-sm font-bold text-center">Something went wrong. Please try again.</p>
+                )}
+              </form>
+            )}
+          </div>
+        </div>
       </div>
     </section>
-  );
-}
-
-function ContactInfoItem({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <span className="text-zinc-500 text-xs uppercase tracking-widest font-mono block mb-1">
-        {label}
-      </span>
-      <span className="text-foreground text-lg font-medium">{value}</span>
-    </div>
   );
 }
