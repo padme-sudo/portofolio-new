@@ -16,10 +16,11 @@ export default function MusicPlayer() {
   const [muted, setMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const btnRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (open && panelRef.current && !panelRef.current.contains(e.target as Node)) {
+      if (open && panelRef.current && !panelRef.current.contains(e.target as Node) && btnRef.current && !btnRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
     };
@@ -61,7 +62,7 @@ export default function MusicPlayer() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
+    <div className="fixed bottom-24 md:bottom-4 right-4 z-50 flex flex-col items-end gap-2">
       <audio ref={audioRef} loop onEnded={() => {
         const next = (current + 1) % tracks.length;
         setCurrent(next);
@@ -72,9 +73,9 @@ export default function MusicPlayer() {
       }} />
 
       {open && (
-        <div ref={panelRef} className="neo-border bg-white neo-shadow-sm p-4 w-60">
-          <p className="font-black text-xs uppercase mb-2">Playlist</p>
-          <div className="space-y-1.5 mb-3">
+        <div ref={panelRef} className="neo-border bg-white neo-shadow-sm p-2 w-48">
+          <p className="font-black text-[10px] uppercase mb-1.5">Playlist</p>
+          <div className="space-y-1 mb-2">
             {tracks.map((t, i) => (
               <button
                 key={i}
@@ -90,7 +91,7 @@ export default function MusicPlayer() {
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-2 mb-1.5">
             <button onClick={toggleMute} className="w-6 h-6 flex items-center justify-center hover:scale-105 transition-all">
               {muted || volume === 0 ? (
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -135,11 +136,12 @@ export default function MusicPlayer() {
       )}
 
       <button
+        ref={btnRef}
         onClick={() => setOpen(!open)}
-        className="w-11 h-11 neo-border bg-yellow neo-shadow-sm flex items-center justify-center hover:scale-105 transition-all"
+        className="w-9 h-9 md:w-11 md:h-11 neo-border bg-yellow neo-shadow-sm flex items-center justify-center hover:scale-105 transition-all"
         title="Music"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M9 18V5l12-2v13" />
           <circle cx="6" cy="18" r="3" />
           <circle cx="18" cy="16" r="3" />
