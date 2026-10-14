@@ -74,6 +74,14 @@ export type ProjectStatus =
   | "On Development"
   | "Contributor";
 
+export const certifications = [
+  {
+    title: "MTCNA",
+    issuer: "MikroTik",
+    year: "2018",
+  },
+];
+
 export const projects: {
   title: string;
   status: ProjectStatus;

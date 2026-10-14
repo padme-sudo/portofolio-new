@@ -4,6 +4,7 @@ import { useState } from "react";
 import { services } from "@/lib/data";
 import type { IconType } from "react-icons";
 import { LuCodeXml, LuSword, LuWifi } from "react-icons/lu";
+import Certifications from "./Certifications";
 
 const serviceIcons: Record<string, IconType> = {
   "Web Development": LuCodeXml,
@@ -15,7 +16,7 @@ export default function Services() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <div className="flex flex-col items-start px-9 sm:px-0">
+    <div className="flex flex-col lg:flex-row items-start gap-8 px-9 sm:px-0">
       <div className="pt-3 md:pt-9">
         <h3 className="text-[#f5f5f5] text-3xl md:text-4xl font-semibold md:mb-6">
           What I do?
@@ -63,6 +64,9 @@ export default function Services() {
             );
           })}
         </ul>
+      </div>
+      <div className="w-full pt-3 md:pt-9 md:ml-16">
+        <Certifications />
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ export default function TerminalDemo() {
           ],
           3: [
             `email: ${profile.email}`,
-            "github: github.com",
+            `github: ${profile.github}`,
             "status: open for work ✔",
           ],
         }}
