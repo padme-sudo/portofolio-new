@@ -1,155 +1,111 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #FFFDF7;
-  --bg-secondary: #F5F0E8;
-  --fg: #1a1a1a;
-  --fg-secondary: #555;
-  --border-color: #1a1a1a;
-  --shadow: #1a1a1a;
-  --yellow: #FFDE21;
-  --pink: #FF6B6B;
-  --purple: #6C5CE7;
-  --cyan: #00D4FF;
-  --green: #00E676;
-  --orange: #FFA502;
-  --blue: #3B82F6;
-  --white: #FFFFFF;
+  --background: #0a0a0a;
+  --foreground: #f5f5f5;
+  --white: #f5f5f5;
+  --white-icon: #a1a1aa;
+  --white-icon-tr: rgba(255, 255, 255, 0.08);
+  --card: rgba(20, 20, 20, 0.61);
+  --sec: #a9ff5b;
+  --sec-purple: #a476ff;
 }
 
-.dark {
-  --bg: #0f0f0f;
-  --bg-secondary: #1a1a1a;
-  --fg: #f5f0eb;
-  --fg-secondary: #999;
-  --border-color: #f5f0eb;
-  --shadow: #f5f0eb;
-  --yellow: #facc15;
-  --pink: #f87171;
-  --purple: #818cf8;
-  --cyan: #22d3ee;
-  --green: #4ade80;
-  --orange: #fb923c;
-  --blue: #60a5fa;
-  --white: #262626;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
-@theme {
-  --color-bg: var(--bg);
-  --color-bg-secondary: var(--bg-secondary);
-  --color-fg: var(--fg);
-  --color-fg-secondary: var(--fg-secondary);
-  --color-border: var(--border-color);
-  --color-shadow: var(--shadow);
-  --color-yellow: var(--yellow);
-  --color-pink: var(--pink);
-  --color-purple: var(--purple);
-  --color-cyan: var(--cyan);
-  --color-green: var(--green);
-  --color-orange: var(--orange);
-  --color-white: var(--white);
-}
-
-* {
-  box-sizing: border-box;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
-::selection {
-  background: var(--yellow);
-  color: #1a1a1a;
+/* Marquee */
+@keyframes scroll-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-::-webkit-scrollbar {
-  width: 12px;
+.animate-scroll {
+  animation: scroll-marquee 30s linear infinite;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg);
-  border-left: 3px solid var(--border-color);
+.animate-scroll:hover {
+  animation-play-state: paused;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 0;
+/* Shiny text effects like reference */
+.shiny-white {
+  background: linear-gradient(110deg, #a1a1aa 20%, #fff 40%, #fff 60%, #a1a1aa 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 6s linear infinite;
 }
 
-.neo-border {
-  border: 3px solid var(--border-color);
+.shiny-sec {
+  background: linear-gradient(110deg, #a9ff5b 20%, #eaffd0 40%, #eaffd0 60%, #a9ff5b 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 6s linear infinite;
 }
 
-.neo-shadow {
-  box-shadow: 5px 5px 0px 0px var(--shadow);
+@keyframes shine {
+  to {
+    background-position: -200% center;
+  }
 }
 
-.neo-shadow-sm {
-  box-shadow: 3px 3px 0px 0px var(--shadow);
+/* Navbar scrolling state */
+#main-nav {
+  border-radius: 9999px;
+  border-color: transparent;
 }
 
-.neo-shadow-lg {
-  box-shadow: 8px 8px 0px 0px var(--shadow);
+#main-nav.scrolling {
+  background: rgba(10, 10, 10, 0.75);
+  border-color: var(--white-icon-tr);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-.neo-card {
-  border: 3px solid var(--border-color);
-  box-shadow: 5px 5px 0px 0px var(--shadow);
+#main-nav a.active {
+  color: #fff;
 }
 
-.neo-card-yellow {
-  background: var(--yellow);
+#main-nav a.active .nav-indicator {
+  transform: scale(1);
+  opacity: 1;
 }
 
-.neo-card-pink {
-  background: var(--pink);
+/* Subtle grid glow background */
+.hero-glow {
+  background:
+    radial-gradient(600px circle at 20% 10%, rgba(169, 255, 91, 0.07), transparent 60%),
+    radial-gradient(700px circle at 85% 20%, rgba(164, 118, 255, 0.1), transparent 60%);
 }
 
-.neo-card-purple {
-  background: var(--purple);
+/* Terminal: sembunyikan scrollbar tapi tetap bisa scroll */
+.no-visible-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.neo-card-cyan {
-  background: var(--cyan);
+.no-visible-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-
-.neo-card-green {
-  background: var(--green);
-}
-
-.neo-card-orange {
-  background: var(--orange);
-}
-
-.neo-card-white {
-  background: var(--white);
-}
-
-.neo-btn {
-  border: 3px solid var(--border-color);
-  box-shadow: 4px 4px 0px 0px var(--shadow);
-  transition: all 0.1s ease;
-  font-weight: 700;
-}
-
-.neo-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px var(--shadow);
-}
-
-.neo-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px var(--shadow);
-}
-
-.neo-section {
-  border-top: 3px solid var(--border-color);
-  border-bottom: 3px solid var(--border-color);
-}
-
-

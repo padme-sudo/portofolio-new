@@ -1,33 +1,32 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import MusicPlayer from "@/components/ui/MusicPlayer";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import "@/components/ProfileCard.css";
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-inter" });
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
-  title: "Aditya Siagian | Portofolio",
-  description: "A premium personal portfolio showcasing creative web development and design by Aditya Siagian.",
-  icons: {
-    icon: "/profile3.jpeg",
-  },
+  title: "Aditya Siagian | Software Developer",
+  description:
+    "Portfolio of Aditya Siagian — Software Developer building interactive and seamless digital experiences with modern frontend.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${spaceGrotesk.variable} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <Navbar />
-          <main>{children}</main>
-          <MusicPlayer />
-        </ThemeProvider>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+    >
+      <body className="min-h-full flex flex-col bg-[#0a0a0a] text-[#f5f5f5]">
+        {children}
       </body>
     </html>
   );
